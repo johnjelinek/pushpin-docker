@@ -30,7 +30,8 @@ RUN \
   git submodule init && git submodule update && \
   make && \
   cp config/pushpin.conf config/internal.conf config/routes . && \
-  sed -ie 's/localhost:80/app:8080/' routes
+  sed -i 's/localhost:80/app:8080/' routes && \
+  sed -i 's/push_in_http_addr=127.0.0.1/push_in_http_addr=0.0.0.0/' pushpin.conf
 
 # Cleanup
 RUN \
@@ -45,5 +46,7 @@ WORKDIR /pushpin
 CMD ["/pushpin/pushpin"]
 
 # Expose ports.
-# - 7999: HTTP
+# - 7999: HTTP port to forward on to the app
+# - 5561: HTTP port to receive real-time messages to update in the app
 EXPOSE 7999
+EXPOSE 5561

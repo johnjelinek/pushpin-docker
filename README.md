@@ -20,16 +20,24 @@ This repository contains **Dockerfile** of [Pushpin](http://www.pushpin.org/) fo
 
 ### Usage
 
-    docker run -d -P johnjelinek/pushpin
+    docker run -d -p 7999:7999 --name pushpin johnjelinek/pushpin
 
-#### Attach app to forward traffic
+#### Attach app to accept traffic
 
-  1. Start an app container that exposes on port 8080.
+  1. Start an acceptor container that exposes on port 8080.
 
-  2. Start a container by linking to the app container:
+  2. Start a pushpin container by linking to the acceptor container:
 
     ```sh
-    docker run -d -P --link app:app johnjelinek/pushpin
+    docker run -d -p 7999:7999 --link acceptor:app johnjelinek/pushpin
     ```
 
-Open `http://<host>:<assigned_port>` to see the result.
+Open `http://<host>:7999` to see the result.
+
+#### Attach app to respond to traffic
+
+  1. Start a responder container by linking to the pushpin container:
+
+    ```sh
+    docker run -d --link pushpin:pushpin dockerfile/ubuntu bash -c "while true; do curl -s -d '{ \"items\": [ { \"channel\": \"test\", \"http-stream\": { \"content\": \"hello there\n\" } } ] }' http://pushpin:5561/publish ; sleep 1; done"
+    ```
