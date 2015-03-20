@@ -5,8 +5,10 @@
 #
 
 # Pull the base image
-FROM dockerfile/ubuntu
+FROM ubuntu:15.04
 MAINTAINER John Jelinek IV <john@johnjelinek.com>
+
+ENV PUSHPIN_VERSION 1.1.0
 
 # Install dependencies
 RUN \
@@ -14,24 +16,22 @@ RUN \
   apt-get install -y pkg-config libqt4-dev libqca2-dev \
   libqca2-plugin-ossl libqjson-dev libzmq3-dev python-zmq \
   python-setproctitle python-jinja2 python-tnetstring \
-  zurl libzmq3-dev libsqlite3-dev sqlite3
+  mongrel2-core zurl git
 
-# Install Mongrel2
+# Build Pushpin
 RUN \
-  git clone git://github.com/zedshaw/mongrel2.git /tmp/mongrel2 && \
-  cd /tmp/mongrel2 && \
-  git submodule init && git submodule update && \
-  make clean all && make install
-
-# Install Pushpin
-RUN \
-  git clone git://github.com/fanout/pushpin.git /pushpin &&\
+  git clone git://github.com/fanout/pushpin.git /pushpin && \
   cd /pushpin && \
+  git checkout tags/v"$PUSHPIN_VERSION" && \
   git submodule init && git submodule update && \
-  make && \
-  cp config/pushpin.conf config/internal.conf config/routes . && \
-  sed -i 's/localhost:80/app:8080/' routes && \
-  sed -i 's/push_in_http_addr=127.0.0.1/push_in_http_addr=0.0.0.0/' pushpin.conf
+  make
+
+# Configure Pushpin
+RUN \
+  cd /pushpin && \
+  cp examples/config/* . && \
+  sed -i -e 's/localhost:80/app:8080/' routes && \
+  sed -i -e 's/push_in_http_addr=127.0.0.1/push_in_http_addr=0.0.0.0/' pushpin.conf
 
 # Cleanup
 RUN \
