@@ -20,7 +20,7 @@ This repository contains **Dockerfile** of [Pushpin](http://www.pushpin.org/) fo
 
 ### Usage
 
-    docker run -d -p 7999:7999 --name pushpin johnjelinek/pushpin
+    docker run -dt -p 7999:7999 --name pushpin johnjelinek/pushpin
 
 #### Attach app to accept traffic
 
@@ -29,7 +29,7 @@ This repository contains **Dockerfile** of [Pushpin](http://www.pushpin.org/) fo
   2. Start a pushpin container by linking to the acceptor container:
 
     ```sh
-    docker run -d -p 7999:7999 --link acceptor:app johnjelinek/pushpin
+    docker run -dt -p 7999:7999 --link acceptor:app johnjelinek/pushpin
     ```
 
 Open `http://<host>:7999` to see the result.
@@ -39,5 +39,5 @@ Open `http://<host>:7999` to see the result.
   1. Start a responder container by linking to the pushpin container:
 
     ```sh
-    docker run -d --link pushpin:pushpin dockerfile/ubuntu bash -c "while true; do curl -s -d '{ \"items\": [ { \"channel\": \"test\", \"http-stream\": { \"content\": \"hello there\n\" } } ] }' http://pushpin:5561/publish ; sleep 1; done"
+    docker run -d --link pushpin:pushpin ubuntu bash -c "apt-get update; apt-get install -y curl; while true; do curl -s -d '{ \"items\": [ { \"channel\": \"test\", \"http-stream\": { \"content\": \"hello there\n\" } } ] }' http://pushpin:5561/publish ; sleep 1; done"
     ```
