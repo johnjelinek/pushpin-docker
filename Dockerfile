@@ -5,10 +5,10 @@
 #
 
 # Pull the base image
-FROM ubuntu:15.04
+FROM ubuntu:15.10
 MAINTAINER John Jelinek IV <john@johnjelinek.com>
 
-ENV PUSHPIN_VERSION 1.1.0
+ENV PUSHPIN_VERSION 1.6.0
 
 # Install dependencies
 RUN \
@@ -16,7 +16,7 @@ RUN \
   apt-get install -y pkg-config libqt4-dev libqca2-dev \
   libqca2-plugin-ossl libqjson-dev libzmq3-dev python-zmq \
   python-setproctitle python-jinja2 python-tnetstring \
-  mongrel2-core zurl git
+  python-sortedcontainers mongrel2-core zurl git
 
 # Build Pushpin
 RUN \

@@ -3,10 +3,11 @@
 
 This repository contains **Dockerfile** of [Pushpin](http://www.pushpin.org/) for [Docker](https://www.docker.com/) published to the public [Docker Hub Registry](https://registry.hub.docker.com/).
 
+### Pushpin Version: 1.6.0
 
 ### Base Docker Image
 
-* [dockerfile/ubuntu](http://dockerfile.github.io/#/ubuntu)
+* [ubuntu:15.10](https://hub.docker.com/_/ubuntu/)
 
 
 ### Installation
