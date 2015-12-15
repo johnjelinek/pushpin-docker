@@ -9,6 +9,7 @@ FROM ubuntu:15.10
 MAINTAINER John Jelinek IV <john@johnjelinek.com>
 
 ENV PUSHPIN_VERSION 1.6.0
+ENV ZURL_VERSION 1.4.10
 
 # Install dependencies
 RUN \
@@ -16,7 +17,17 @@ RUN \
   apt-get install -y pkg-config libqt4-dev libqca2-dev \
   libqca2-plugin-ossl libqjson-dev libzmq3-dev python-zmq \
   python-setproctitle python-jinja2 python-tnetstring \
-  python-sortedcontainers mongrel2-core zurl git
+  python-sortedcontainers mongrel2-core git libcurl4-gnutls-dev
+
+# Build Zurl
+RUN \
+  git clone git://github.com/fanout/zurl.git /zurl && \
+  cd /zurl && \
+  git checkout tags/v"$ZURL_VERSION" && \
+  git submodule init && git submodule update && \
+  ./configure && \
+  make && \
+  make install
 
 # Build Pushpin
 RUN \
